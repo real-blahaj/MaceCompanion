@@ -33,6 +33,7 @@
   "mrc.config.category.roundhud": "Round Info HUD",
 
   "mrc.config.category.roundhud.group.hudoptions": "HUD Options",
+  "mrc.config.category.roundhud.group.hudoptions.description": "General configuration for the on-screen HUD.",
   "mrc.config.category.roundhud.group.hudoptions.option.displayHud": "Display HUD",
   "mrc.config.category.roundhud.group.hudoptions.option.displayHud.description": "Toggles whether the Round Info HUD should display.",
   "mrc.config.category.roundhud.group.hudoptions.option.hudLocation": "Location",
