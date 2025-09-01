@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "id": "macecompanion",
+  "version": "${version}",
+  "name": "Mace Roulette Companion",
+  "description": "A quality-of-life mod for the Mace Roulette game on DiamondFire.",
+  "authors": ["pixiboot"],
+  "contact": {
+    "issues": "https://github.com/real-blahaj/macecompanion/issues",
+    "sources": "https://github.com/real-blahaj/macecompanion"
+  },
+  "license": "LGPL-3.0",
+  "icon": "assets/macecompanion/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "fabric-datagen": [
+      "dev.pixiboot.macecompanion.client.MaceCompanionDataGenerator"
+    ],
+    "client": [
+      "dev.pixiboot.macecompanion.client.MaceCompanionClient"
+    ],
+    "main": [
+      "dev.pixiboot.macecompanion.MaceCompanion"
+    ],
+    "modmenu": [
+      "dev.pixiboot.macecompanion.client.config.ModMenuIntegration"
+    ]
+  },
+  "mixins": [
+    "macecompanion.mixins.json",
+    {
+      "config": "macecompanion.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric-language-kotlin": ">=${kotlin_loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}",
+    "yet_another_config_lib_v3": ">=${yacl_version}"
+  }
+}
