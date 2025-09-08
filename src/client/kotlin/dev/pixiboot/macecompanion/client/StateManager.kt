@@ -35,7 +35,9 @@ object StateManager {
 
     private val chatEliminationRegex = """⏵ .+ was eliminated by .+! \((\d+) remain\)""".toRegex()
     private val chatEarlyLeaveRegex = """⏵ .+ left while alive! \((\d+) remain\)""".toRegex()
-    private val chatElimCounterRegex = """  ◇ \+\d+, total (\d+)""".toRegex()
+    private val chatBlowUpRegex = """⏵ .+ blew up! \((\d+) remain\)""".toRegex()
+    private val chatVoidEliminationRegex = """⏵ .+ fell off the map! \((\d+) remain\)""".toRegex()
+    private val chatElimCounterRegex = """  ◇ \+\d+🪓, total (\d+)🪓""".toRegex()
 
     private val chatLeaderboardHeaderRegex = """ +‌*ɢᴀᴍᴇ ʟᴇᴀᴅᴇʀʙᴏᴀʀᴅ:""".toRegex()
 
@@ -66,10 +68,9 @@ object StateManager {
 
             // Round Number Header
             chatRoundNumberRegex.matchEntire(message.string)?.groups[1]?.let { setRoundNumber(it.value.toIntOrNull() ?: -1) }
-            // Slain Elimination
-            chatEliminationRegex.matchEntire(message.string)?.groups[1]?.let { playersAlive = it.value.toIntOrNull() ?: -1 }
-            // Early Leave Elimination
-            chatEarlyLeaveRegex.matchEntire(message.string)?.groups[1]?.let { playersAlive = it.value.toIntOrNull() ?: -1 }
+            // Elimination Messages (slain by, left the game, blew up, fell off the map)
+            val eliminationMatch = chatEliminationRegex.matchEntire(message.string) ?: chatEarlyLeaveRegex.matchEntire(message.string) ?: chatBlowUpRegex.matchEntire(message.string) ?: chatVoidEliminationRegex.matchEntire(message.string)
+            eliminationMatch?.groups[1]?.let { playersAlive = it.value.toIntOrNull() ?: -1 }
             // Elimination Counter
             chatElimCounterRegex.matchEntire(message.string)?.groups[1]?.let { eliminations = it.value.toIntOrNull() ?: 0 }
             // Game Leaderboard Header
