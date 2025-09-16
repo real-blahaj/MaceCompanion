@@ -18,16 +18,16 @@ object RoundInfoHud {
 
             // Scale + Alignment
             context.matrices.pushMatrix()
-            context.matrices.scale(Config.hudScale.value.toFloat())
+            context.matrices.scale(Config.hudScale.value)
             context.matrices.translate(
-                if (Config.hudLocation.value.rightAligned) window.scaledWidth.div(Config.hudScale.value.toFloat()) else 0f,
-                if (Config.hudLocation.value.bottomAligned) window.scaledHeight.div(Config.hudScale.value.toFloat()) else 0f
+                if (Config.hudLocation.value.rightAligned) window.scaledWidth.div(Config.hudScale.value) else 0f,
+                if (Config.hudLocation.value.bottomAligned) window.scaledHeight.div(Config.hudScale.value) else 0f
             )
             // Padding
             context.matrices.pushMatrix()
             context.matrices.translate(
-                Config.hudXMargin.value.times(if (Config.hudLocation.value.rightAligned) -1f else 1f).div(Config.hudScale.value.toFloat()),
-                Config.hudYMargin.value.times(if (Config.hudLocation.value.bottomAligned) -1f else 1f).div(Config.hudScale.value.toFloat()),
+                Config.hudXMargin.value.times(if (Config.hudLocation.value.rightAligned) -1f else 1f).div(Config.hudScale.value),
+                Config.hudYMargin.value.times(if (Config.hudLocation.value.bottomAligned) -1f else 1f).div(Config.hudScale.value),
             )
 
             var yOffset = 0
