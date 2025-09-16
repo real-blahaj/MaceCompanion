@@ -16,12 +16,19 @@ object RoundInfoHud {
 
             val window = MinecraftClient.getInstance().window
 
+            // Scale + Alignment
             context.matrices.pushMatrix()
-            var xTranslate = Config.hudXMargin.value.toFloat()
-            if (Config.hudLocation.value.rightAligned) xTranslate = window.scaledWidth.minus(xTranslate)
-            var yTranslate = Config.hudYMargin.value.toFloat()
-            if (Config.hudLocation.value.bottomAligned) yTranslate = window.scaledHeight.minus(yTranslate)
-            context.matrices.translate(xTranslate, yTranslate)
+            context.matrices.scale(Config.hudScale.value.toFloat())
+            context.matrices.translate(
+                if (Config.hudLocation.value.rightAligned) window.scaledWidth.div(Config.hudScale.value.toFloat()) else 0f,
+                if (Config.hudLocation.value.bottomAligned) window.scaledHeight.div(Config.hudScale.value.toFloat()) else 0f
+            )
+            // Padding
+            context.matrices.pushMatrix()
+            context.matrices.translate(
+                Config.hudXMargin.value.times(if (Config.hudLocation.value.rightAligned) -1f else 1f).div(Config.hudScale.value.toFloat()),
+                Config.hudYMargin.value.times(if (Config.hudLocation.value.bottomAligned) -1f else 1f).div(Config.hudScale.value.toFloat()),
+            )
 
             var yOffset = 0
             var elements = Config.hudElements.value
@@ -30,6 +37,7 @@ object RoundInfoHud {
                 yOffset += it.render(context, yOffset, Config.hudLocation.value.rightAligned, Config.hudLocation.value.bottomAligned)
             }
 
+            context.matrices.popMatrix()
             context.matrices.popMatrix()
         }
     }

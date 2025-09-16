@@ -1,6 +1,7 @@
 package dev.pixiboot.macecompanion.client.config
 
 import dev.isxander.yacl3.api.*
+import dev.isxander.yacl3.api.controller.DoubleFieldControllerBuilder
 import dev.isxander.yacl3.api.controller.EnumControllerBuilder
 import dev.isxander.yacl3.api.controller.IntegerFieldControllerBuilder
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder
@@ -134,6 +135,12 @@ object ConfigMenu {
                         .description(OptionDescription.of(Text.translatable("mrc.config.category.roundhud.group.hudoptions.option.hudYMargin.description")))
                         .binding(Config.hudYMargin.asBinding())
                         .controller({ IntegerFieldControllerBuilder.create(it).formatValue { Text.of("$it pixels") } })
+                        .build())
+                    .option(Option.createBuilder<Double>()
+                        .name(Text.translatable("mrc.config.category.roundhud.group.hudoptions.option.hudScale"))
+                        .description(OptionDescription.of(Text.translatable("mrc.config.category.roundhud.group.hudoptions.option.hudScale.description")))
+                        .binding(Config.hudScale.asBinding())
+                        .controller { DoubleFieldControllerBuilder.create(it).formatValue { Text.of("${it}x") } }
                         .build())
                     .build())
                 .group(ListOption.createBuilder<HudElements>()

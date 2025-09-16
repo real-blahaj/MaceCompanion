@@ -24,6 +24,7 @@ object Config : JsonFileCodecConfig<Config>(FabricLoader.getInstance().configDir
     val hudLocation by register<HudLocation>(HudLocation.TOP_LEFT, HudLocation.CODEC)
     val hudXMargin by register<Int>(10, INT)
     val hudYMargin by register<Int>(10, INT)
+    val hudScale by register<Double>(1.0, DOUBLE)
 
     val hudElements by register<List<HudElements>>(listOf(HudElements.ROUND_NUMBER, HudElements.PLAYERS_ALIVE, HudElements.ELIMINATIONS,
         HudElements.PLAYTIME, HudElements.MODIFIERS), HudElements.CODEC.listOf())
