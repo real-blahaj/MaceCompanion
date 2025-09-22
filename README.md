@@ -59,7 +59,7 @@ Minecraft mod that adds a few quality of life features to Mace Roulette.
     - [x] Configure HUD's...
       - [x] ...position
       - [x] ...X/Y padding
-      - [ ] ...scale (optional)
+      - [x] ...scale (optional)
       - [x] ...order
   - [ ] Display toasts...
     - [ ] ...for events
