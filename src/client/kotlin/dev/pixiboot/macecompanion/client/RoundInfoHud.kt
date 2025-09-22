@@ -12,6 +12,7 @@ object RoundInfoHud {
         HudElementRegistry.attachElementBefore(VanillaHudElements.CHAT, Identifier.of("macecompanion","round_info")
         ) { context, tickCounter ->
             if (!Config.displayHud.value) return@attachElementBefore
+            if (MinecraftClient.getInstance().debugHud.shouldShowDebugHud()) return@attachElementBefore
             if (!StateManager.gameOngoing) return@attachElementBefore
 
             val window = MinecraftClient.getInstance().window
