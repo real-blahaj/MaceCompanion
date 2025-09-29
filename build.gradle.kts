@@ -52,6 +52,10 @@ repositories {
     maven("https://maven.terraformersmc.com/") {
         name = "Terraformers"
     }
+    exclusiveContent {
+        forRepository { maven("https://api.modrinth.com/maven") {name="Modrinth"} }
+        filter { includeGroup("maven.modrinth") }
+    }
 }
 
 dependencies {
@@ -64,6 +68,11 @@ dependencies {
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project.property("fabric_version")}")
     modImplementation("dev.isxander:yet-another-config-lib:${project.property("yacl_version")}")
     modImplementation("com.terraformersmc:modmenu:${property("modmenu_version")}")
+
+    modApi("maven.modrinth:flint:${project.property("flint_version")}")
+    modImplementation("net.kyori:adventure-platform-fabric:${project.property("adventure_version")}") {
+        exclude("net.fabricmc.fabric-api")
+    }
 }
 
 tasks.processResources {
