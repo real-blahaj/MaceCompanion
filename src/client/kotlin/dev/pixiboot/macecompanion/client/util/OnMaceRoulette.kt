@@ -2,8 +2,6 @@ package dev.pixiboot.macecompanion.client.util
 
 import dev.dfonline.flint.FlintAPI
 import dev.dfonline.flint.feature.trait.PlotSwitchListeningFeature
-import dev.dfonline.flint.hypercube.Plot
-import dev.pixiboot.macecompanion.MaceCompanion
 import dev.pixiboot.macecompanion.client.StateManager
 
 object OnMaceRoulette {
