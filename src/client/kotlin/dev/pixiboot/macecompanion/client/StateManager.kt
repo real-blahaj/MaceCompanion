@@ -60,11 +60,23 @@ object StateManager {
         modifierBoosters = mutableMapOf()
 //        MaceCompanion.LOGGER.info("Round: $round - Alive:$playersAlive/$playersTotal")
     }
+    fun resetState() {
+        gameOngoing = false
+        round = -1
+        roundColor = Style.EMPTY.withColor(0x9ef6fc)
+        playersAlive = -1
+        playersTotal = -1
+        eliminations = -1
+        eliminated = true
+        playtime = null
+        modifiers = mutableListOf()
+        modifierBoosters = mutableMapOf()
+    }
     fun registerListeners() {
         // Chat Listener
         ClientReceiveMessageEvents.ALLOW_GAME.register { message, overlay ->
             if (overlay) return@register true
-            if (!OnMaceRoulette.onMaceRoulette()) return@register true
+            if (!OnMaceRoulette.onMace) return@register true
 
             // Round Number Header
             chatRoundNumberRegex.matchEntire(message.string)?.groups[1]?.let { setRoundNumber(it.value.toIntOrNull() ?: -1) }
@@ -108,7 +120,7 @@ object StateManager {
         TitleCallback.EVENT.register(
             object : TitleCallback {
                 override fun onTitle(packet: TitleS2CPacket): ActionResult {
-                    if (!OnMaceRoulette.onMaceRoulette()) return ActionResult.PASS
+                    if (!OnMaceRoulette.onMace) return ActionResult.PASS
                     titleRoundNumberRegex.matchEntire(packet.text.string)?.let { roundNumberMatch ->
                         roundNumberMatch.groups[1]?.let { setRoundNumber(it.value.toIntOrNull() ?: -1) }
                         roundColor = packet.text.siblings[0].style ?: roundColor
@@ -123,24 +135,13 @@ object StateManager {
         SubtitleCallback.EVENT.register(
             object : SubtitleCallback {
                 override fun onSubtitle(packet: SubtitleS2CPacket): ActionResult {
-                    if (!OnMaceRoulette.onMaceRoulette()) return ActionResult.PASS
+                    if (!OnMaceRoulette.onMace) return ActionResult.PASS
                     titlePlayersAliveRegex.matchEntire(packet.text.string)?.let { playersAliveMatch -> playersAliveMatch.groups[1]?.let { playersAlive = it.value.toIntOrNull() ?: -1 } }
                     return ActionResult.PASS
                 }
             }
         )
 
-        ClientPlayConnectionEvents.DISCONNECT.register { handler, client ->
-            gameOngoing = false
-            round = -1
-            roundColor = Style.EMPTY.withColor(0x9ef6fc)
-            playersAlive = -1
-            playersTotal = -1
-            eliminations = -1
-            eliminated = true
-            playtime = null
-            modifiers = mutableListOf()
-            modifierBoosters = mutableMapOf()
-        }
+        ClientPlayConnectionEvents.DISCONNECT.register { _, _ -> resetState() }
     }
 }
