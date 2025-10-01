@@ -3,6 +3,10 @@ package dev.pixiboot.macecompanion.client.util
 import dev.pixiboot.macecompanion.MaceCompanion
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.minecraft.client.MinecraftClient
+import net.minecraft.nbt.NbtCompound
+import net.minecraft.network.packet.c2s.common.CustomClickActionC2SPacket
+import net.minecraft.util.Identifier
+import java.util.Optional
 
 object SendMessage {
     private val delayedMessages = mutableListOf<String>()
@@ -27,6 +31,17 @@ object SendMessage {
         }
         val player = MinecraftClient.getInstance().player ?: return
         player.networkHandler.sendChatCommand(message)
+    }
+    fun sendPlotCommand(command: String) {
+        if (MaceCompanion.DEBUG_MODE) {
+            MaceCompanion.LOGGER.info("Debug Mode prevented the plot command \"${command}\" from being sent.")
+            return
+        }
+        val player = MinecraftClient.getInstance().player ?: return
+        player.networkHandler.sendPacket(CustomClickActionC2SPacket(
+            Identifier.of("hypercube", "plot_command"),
+            Optional.of(NbtCompound().also { it.putString("command", command) })
+        ))
     }
 
     fun registerTickListener() {
