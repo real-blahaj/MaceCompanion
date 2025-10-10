@@ -193,6 +193,24 @@ enum class Modifiers {
         override val icon = ItemStack(Items.CHAINMAIL_BOOTS)
     },
 
+    PINATA {
+        override val matchName = "Zombie Piñata"
+        override val translatable = Text.translatable("mrc.modifier.zombie_pinata")
+        override val icon = ItemStack(Items.ZOMBIE_HORSE_SPAWN_EGG)
+    },
+
+    SOUL_FLOOR {
+        override val matchName = "Soul Floor"
+        override val translatable = Text.translatable("mrc.modifier.soul_floor")
+        override val icon = ItemStack(Items.SOUL_SAND)
+    },
+
+    PUMPKIN {
+        override val matchName = "Pumpkin Curse"
+        override val translatable = Text.translatable("mrc.modifier.pumpkin_curse")
+        override val icon = ItemStack(Items.PUMPKIN)
+    },
+
     MIRAGE {
         override val matchName = "Mirage"
         override val translatable = Text.translatable("mrc.modifier.mirage")
