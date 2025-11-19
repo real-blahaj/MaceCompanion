@@ -1,7 +1,7 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "dev.pixiboot.macecompanion.mixin",
+  "package": "moe.pxe.macecompanion.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
   ],

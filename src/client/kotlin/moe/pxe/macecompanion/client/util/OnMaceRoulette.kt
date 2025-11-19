@@ -1,0 +1,18 @@
+package moe.pxe.macecompanion.client.util
+
+import dev.dfonline.flint.FlintAPI
+import dev.dfonline.flint.feature.trait.PlotSwitchListeningFeature
+import moe.pxe.macecompanion.client.StateManager
+
+object OnMaceRoulette {
+    var onMace = false
+    fun registerFlintFeature() {
+        FlintAPI.confirmLocationWithLocate()
+        FlintAPI.registerFeature(
+            PlotSwitchListeningFeature { oldPlot, plot ->
+                StateManager.resetState()
+                onMace = setOf(14000002 /* Mace Roulette */, 14000004 /* MaceDev */, 14000007 /* MaceStatless (old) */, 70525 /* MaceStatless (new) */).contains(plot.id)
+            }
+        )
+    }
+}

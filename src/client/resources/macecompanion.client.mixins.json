@@ -1,10 +1,11 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "dev.pixiboot.macecompanion.client.mixin",
+  "package": "moe.pxe.macecompanion.client.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
-    "SubtitlePacketMixin"
+    "SubtitlePacketMixin",
+    "TitlePacketMixin"
   ],
   "injectors": {
     "defaultRequire": 1
@@ -13,6 +14,6 @@
     "requireAnnotations": true
   },
   "mixins": [
-    "TitlePacketMixin"
+
   ]
 }

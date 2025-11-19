@@ -14,16 +14,16 @@
   "environment": "client",
   "entrypoints": {
     "fabric-datagen": [
-      "dev.pixiboot.macecompanion.client.MaceCompanionDataGenerator"
+      "moe.pxe.macecompanion.client.MaceCompanionDataGenerator"
     ],
     "client": [
-      "dev.pixiboot.macecompanion.client.MaceCompanionClient"
+      "moe.pxe.macecompanion.client.MaceCompanionClient"
     ],
     "main": [
-      "dev.pixiboot.macecompanion.MaceCompanion"
+      "moe.pxe.macecompanion.MaceCompanion"
     ],
     "modmenu": [
-      "dev.pixiboot.macecompanion.client.config.ModMenuIntegration"
+      "moe.pxe.macecompanion.client.config.ModMenuIntegration"
     ]
   },
   "mixins": [
