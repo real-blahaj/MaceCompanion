@@ -2,7 +2,7 @@ package moe.pxe.macecompanion.client.enums
 
 import dev.isxander.yacl3.api.NameableEnum
 import moe.pxe.macecompanion.client.StateManager
-import moe.pxe.macecompanion.client.util.GetPlayerHeadItem
+import moe.pxe.macecompanion.client.util.PlayerHead
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.gui.DrawContext
 import net.minecraft.text.Style
@@ -139,7 +139,7 @@ enum class HudElements : NameableEnum, StringIdentifiable {
                     playerList.indices.forEach {
                         xPos = 28 + modifierWidth + (it*20)
                         if (rightAligned) xPos = -44 - modifierWidth - (it*20)
-                        context.drawItem(GetPlayerHeadItem.getPlayerHeadItem(playerList[it]), xPos, yPos)
+                        context.drawItem(PlayerHead.fromProfile(playerList[it]), xPos, yPos)
                     }
                 }
 

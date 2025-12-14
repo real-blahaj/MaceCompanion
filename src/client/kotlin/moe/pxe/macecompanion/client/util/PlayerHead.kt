@@ -9,16 +9,16 @@ import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
 import java.util.UUID
 
-object GetPlayerHeadItem {
+object PlayerHead {
     private val headItemCache = mutableMapOf<GameProfile, ItemStack>()
 
-    fun getPlayerHeadItem(property: Property): ItemStack {
+    fun fromProperty(property: Property): ItemStack {
         val profile = GameProfile(UUID.randomUUID(), "")
         profile.properties.put("textures", property)
-        return getPlayerHeadItem(profile)
+        return fromProfile(profile)
     }
 
-    fun getPlayerHeadItem(profile: GameProfile): ItemStack {
+    fun fromProfile(profile: GameProfile): ItemStack {
         headItemCache[profile]?.also { return it }
         val head = ItemStack(Items.PLAYER_HEAD)
         MinecraftClient.getInstance().skinProvider.fetchSkinTextures(profile)
