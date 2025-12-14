@@ -104,5 +104,7 @@
   "mrc.hudelement.players_alive": "Players Alive/Total",
   "mrc.hudelement.eliminations": "Eliminations",
   "mrc.hudelement.playtime": "Game Duration",
-  "mrc.hudelement.modifiers": "Modifiers"
+  "mrc.hudelement.modifiers": "Modifiers",
+
+  "mrc.modmenu.authors_website": "Author's Website"
 }

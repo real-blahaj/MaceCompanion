@@ -6,6 +6,7 @@
   "description": "A quality-of-life mod for the Mace Roulette game on DiamondFire.",
   "authors": ["pixiboot"],
   "contact": {
+    "homepage": "https://modrinth.com/project/fXqvpy3I",
     "issues": "https://github.com/real-blahaj/macecompanion/issues",
     "sources": "https://github.com/real-blahaj/macecompanion"
   },
@@ -40,5 +41,14 @@
     "minecraft": "${minecraft_version}",
     "yet_another_config_lib_v3": ">=${yacl_version}",
     "flint": "*"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.modrinth": "https://modrinth.com/project/fXqvpy3I",
+        "modmenu.github_releases": "https://github.com/real-blahaj/MaceCompanion/releases",
+        "mrc.modmenu.authors_website": "https://pxe.moe"
+      }
+    }
   }
 }
