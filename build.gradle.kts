@@ -11,7 +11,7 @@ version = project.property("mod_version") as String
 group = project.property("maven_group") as String
 
 base {
-    archivesName.set(project.property("archives_base_name") as String)
+    archivesName.set("${project.property("archives_base_name")}-mc${project.property("minecraft_version")}")
 }
 
 val targetJavaVersion = 21
@@ -83,7 +83,7 @@ tasks.processResources {
 
     filesMatching("fabric.mod.json") {
         expand(
-            "version" to project.version,
+            "version" to "${project.version}-mc${project.property("minecraft_version")}",
             "minecraft_version" to project.property("minecraft_version"),
             "loader_version" to project.property("loader_version"),
             "kotlin_loader_version" to project.property("kotlin_loader_version"),
