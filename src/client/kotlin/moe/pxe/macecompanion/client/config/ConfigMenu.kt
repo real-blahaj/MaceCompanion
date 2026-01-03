@@ -7,10 +7,18 @@ import dev.isxander.yacl3.api.controller.IntegerFieldControllerBuilder
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder
 import dev.isxander.yacl3.api.controller.StringControllerBuilder
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder
+import dev.isxander.yacl3.config.v3.value
 import moe.pxe.macecompanion.client.enums.HudElements
 import moe.pxe.macecompanion.client.enums.HudLocation
+import moe.pxe.macecompanion.client.util.OnMaceRoulette
+import net.kyori.adventure.text.format.NamedTextColor
 import net.minecraft.client.gui.screen.Screen
+import net.minecraft.text.ClickEvent
+import net.minecraft.text.Style
 import net.minecraft.text.Text
+import net.minecraft.text.TextColor
+import net.minecraft.util.Formatting
+import java.net.URI
 
 object ConfigMenu {
     fun generateScreen(parent: Screen): Screen? {
@@ -155,6 +163,31 @@ object ConfigMenu {
                     .initial(HudElements.ROUND_NUMBER)
                     .build()
                 )
+                .build())
+            .category(ConfigCategory.createBuilder()
+                .name(Text.translatable("mrc.config.category.miscellaneous"))
+                .option(Option.createBuilder<Boolean>()
+                    .name(Text.translatable("mrc.config.category.miscellaneous.option.useFlint"))
+                    .description(OptionDescription.of(Text.translatable("mrc.config.category.miscellaneous.option.useFlint.description")))
+                    .binding(Config.useFlint.asBinding())
+                    .controller(TickBoxControllerBuilder::create)
+                    .flag(OptionFlag.GAME_RESTART)
+                    .build())
+                .group(ListOption.createBuilder<String>()
+                    .name(Text.translatable("mrc.config.category.miscellaneous.group.plotIds"))
+                    .description(OptionDescription.of(Text.translatable("mrc.config.category.miscellaneous.group.plotIds.description")))
+                    .binding(Config.plotIds.asBinding())
+                    .controller { FormattedStringControllerBuilder.create(it)
+                        .valueFormatter { str -> Text.literal(str).also { text ->
+                            str.toIntOrNull()?.let { text.withColor(NamedTextColor.AQUA.value()) } ?: text.withColor(
+                                NamedTextColor.YELLOW.value())
+                        } }
+                    }
+                    .initial("")
+                    .flag({
+                        OnMaceRoulette.fillPlotIds(Config.plotIds.value.toSet())
+                    })
+                    .build())
                 .build())
             .save(Config::saveToFile)
             .build()
