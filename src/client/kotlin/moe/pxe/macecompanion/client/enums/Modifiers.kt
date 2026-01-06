@@ -171,6 +171,11 @@ enum class Modifiers {
         override val icon = Items.RABBIT_FOOT.defaultStack
     },
 
+    STACKS {
+        override val matchName = "Player Stacks"
+        override val icon = Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE.defaultStack
+    },
+
     SNOWBALL {
         override val matchName = "Snowball Fight"
         override val icon = Items.POWDER_SNOW_BUCKET.defaultStack
