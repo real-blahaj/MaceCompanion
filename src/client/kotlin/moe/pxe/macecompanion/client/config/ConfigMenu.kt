@@ -11,14 +11,11 @@ import dev.isxander.yacl3.config.v3.value
 import moe.pxe.macecompanion.client.enums.HudElements
 import moe.pxe.macecompanion.client.enums.HudLocation
 import moe.pxe.macecompanion.client.util.OnMaceRoulette
+import net.fabricmc.loader.api.FabricLoader
 import net.kyori.adventure.text.format.NamedTextColor
+import net.minecraft.client.gui.screen.ConfirmLinkScreen
 import net.minecraft.client.gui.screen.Screen
-import net.minecraft.text.ClickEvent
-import net.minecraft.text.Style
 import net.minecraft.text.Text
-import net.minecraft.text.TextColor
-import net.minecraft.util.Formatting
-import java.net.URI
 
 object ConfigMenu {
     fun generateScreen(parent: Screen): Screen? {
@@ -172,7 +169,18 @@ object ConfigMenu {
                     .binding(Config.useFlint.asBinding())
                     .controller(TickBoxControllerBuilder::create)
                     .flag(OptionFlag.GAME_RESTART)
+                    .available(FabricLoader.getInstance().isModLoaded("flint"))
                     .build())
+                .also {
+                    if (FabricLoader.getInstance().isModLoaded("flint")) return@also
+                    it.option(ButtonOption.createBuilder()
+                        .name(Text.translatable("mrc.config.category.miscellaneous.option.downloadFlint"))
+                        .description(OptionDescription.of(Text.translatable("mrc.config.category.miscellaneous.option.useFlint.description")))
+                        .action { screen, option ->
+                            ConfirmLinkScreen.open(screen, "https://modrinth.com/mod/flint")
+                        }
+                        .build())
+                }
                 .group(ListOption.createBuilder<String>()
                     .name(Text.translatable("mrc.config.category.miscellaneous.group.plotIds"))
                     .description(OptionDescription.of(Text.translatable("mrc.config.category.miscellaneous.group.plotIds.description")))
@@ -187,6 +195,7 @@ object ConfigMenu {
                     .flag({
                         OnMaceRoulette.fillPlotIds(Config.plotIds.value.toSet())
                     })
+                    .available(FabricLoader.getInstance().isModLoaded("flint"))
                     .build())
                 .build())
             .save(Config::saveToFile)

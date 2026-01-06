@@ -7,9 +7,10 @@ import dev.dfonline.flint.hypercube.Mode
 import dev.isxander.yacl3.config.v3.value
 import moe.pxe.macecompanion.client.StateManager
 import moe.pxe.macecompanion.client.config.Config
+import net.fabricmc.loader.api.FabricLoader
 
 object OnMaceRoulette {
-    val useFlint = Config.useFlint.value
+    val useFlint = FabricLoader.getInstance().isModLoaded("flint") && Config.useFlint.value
     var onMace = !useFlint
 
     val plotIds = mutableSetOf<Int>()
@@ -24,6 +25,7 @@ object OnMaceRoulette {
     }
 
     fun registerFlintFeature() {
+        if (!FabricLoader.getInstance().isModLoaded("flint")) return
         if (!useFlint) return
         FlintAPI.confirmLocationWithLocate()
         FlintAPI.registerFeature(
