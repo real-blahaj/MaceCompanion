@@ -16,6 +16,8 @@ import net.kyori.adventure.text.format.NamedTextColor
 import net.minecraft.client.gui.screen.ConfirmLinkScreen
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.text.Text
+import net.minecraft.text.TextColor
+import net.minecraft.util.Formatting
 
 object ConfigMenu {
     fun generateScreen(parent: Screen): Screen? {
@@ -187,8 +189,7 @@ object ConfigMenu {
                     .binding(Config.plotIds.asBinding())
                     .controller { FormattedStringControllerBuilder.create(it)
                         .valueFormatter { str -> Text.literal(str).also { text ->
-                            str.toIntOrNull()?.let { text.withColor(NamedTextColor.AQUA.value()) } ?: text.withColor(
-                                NamedTextColor.YELLOW.value())
+                            str.toIntOrNull()?.let { text.formatted(Formatting.AQUA) } ?: text.formatted(Formatting.YELLOW)
                         } }
                     }
                     .initial("")
