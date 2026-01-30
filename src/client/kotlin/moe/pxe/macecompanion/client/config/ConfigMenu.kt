@@ -5,18 +5,16 @@ import dev.isxander.yacl3.api.controller.EnumControllerBuilder
 import dev.isxander.yacl3.api.controller.FloatSliderControllerBuilder
 import dev.isxander.yacl3.api.controller.IntegerFieldControllerBuilder
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder
-import dev.isxander.yacl3.api.controller.StringControllerBuilder
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder
 import dev.isxander.yacl3.config.v3.value
 import moe.pxe.macecompanion.client.enums.HudElements
 import moe.pxe.macecompanion.client.enums.HudLocation
 import moe.pxe.macecompanion.client.util.OnMaceRoulette
 import net.fabricmc.loader.api.FabricLoader
-import net.kyori.adventure.text.format.NamedTextColor
 import net.minecraft.client.gui.screen.ConfirmLinkScreen
 import net.minecraft.client.gui.screen.Screen
+import net.minecraft.text.Style
 import net.minecraft.text.Text
-import net.minecraft.text.TextColor
 import net.minecraft.util.Formatting
 
 object ConfigMenu {
@@ -56,7 +54,19 @@ object ConfigMenu {
                     .binding(
                         Config.autoGGStrings.asBinding()
                     )
-                    .controller(StringControllerBuilder::create)
+                    .controller { FormattedStringControllerBuilder.create(it)
+                        .valueFormatter { str ->
+                            val text = Text.empty()
+                            val matches = """(gg)|(good game)""".toRegex(RegexOption.IGNORE_CASE).findAll(str)
+                            var lastIdx = 0
+                            matches.forEach { match ->
+                                text.append(str.substring(lastIdx, match.range.first))
+                                    .append(Text.literal(match.value).setStyle(Style.EMPTY.withColor(0xA0F9FF)))
+                                lastIdx = match.range.last + 1
+                            }
+                            return@valueFormatter text.append(str.substring(matches.lastOrNull()?.let { it.range.last + 1 } ?: 0))
+                        }
+                    }
                     .initial("")
                     .build())
                 .group(OptionGroup.createBuilder()
@@ -90,7 +100,19 @@ object ConfigMenu {
                     .binding(
                         Config.autoGLStrings.asBinding()
                     )
-                    .controller(StringControllerBuilder::create)
+                    .controller { FormattedStringControllerBuilder.create(it)
+                        .valueFormatter { str ->
+                            val text = Text.empty()
+                            val matches = """(gl)|(hf)|(good luck)|(have fun)""".toRegex(RegexOption.IGNORE_CASE).findAll(str)
+                            var lastIdx = 0
+                            matches.forEach { match ->
+                                text.append(str.substring(lastIdx, match.range.first))
+                                    .append(Text.literal(match.value).setStyle(Style.EMPTY.withColor(0xFFCE2D)))
+                                lastIdx = match.range.last + 1
+                            }
+                            return@valueFormatter text.append(str.substring(matches.lastOrNull()?.let { it.range.last + 1 } ?: 0))
+                        }
+                    }
                     .initial("")
                     .build())
                 .group(OptionGroup.createBuilder()
