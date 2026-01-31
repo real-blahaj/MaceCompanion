@@ -4,7 +4,6 @@ import dev.isxander.yacl3.api.ConfigCategory
 import dev.isxander.yacl3.api.NameableEnum
 import dev.isxander.yacl3.api.Option
 import dev.isxander.yacl3.api.OptionDescription
-import dev.isxander.yacl3.api.OptionGroup
 import dev.isxander.yacl3.api.YetAnotherConfigLib
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder
 import dev.isxander.yacl3.config.v3.value
@@ -179,6 +178,7 @@ enum class HudElements : NameableEnum, StringIdentifiable, ConfigurableEnum {
                         }
                         .build())
                     .build())
+                .save(Config::saveToFile)
                 .build()
                 .generateScreen(parent)
         }
