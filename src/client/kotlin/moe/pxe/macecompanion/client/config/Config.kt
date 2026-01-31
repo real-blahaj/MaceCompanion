@@ -32,4 +32,7 @@ object Config : JsonFileCodecConfig<Config>(FabricLoader.getInstance().configDir
     // Misc. Config
     val useFlint by register<Boolean>(true, BOOL)
     val plotIds by register<List<String>>(listOf("mace", "maceroulette", "statless", "14000004"), STRING.listOf())
+
+    // NESTED CONFIG ===========================================================
+    val boosterListMax by register<Int>(10, INT)
 }
