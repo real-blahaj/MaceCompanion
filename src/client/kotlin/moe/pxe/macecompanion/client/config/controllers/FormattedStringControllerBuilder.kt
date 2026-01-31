@@ -1,4 +1,4 @@
-package moe.pxe.macecompanion.client.config
+package moe.pxe.macecompanion.client.config.controllers
 
 import dev.isxander.yacl3.api.Controller
 import dev.isxander.yacl3.api.Option

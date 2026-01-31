@@ -115,5 +115,7 @@
     "mrc.hudelement.playtime": "Game Duration",
     "mrc.hudelement.modifiers": "Modifiers",
 
-    "mrc.modmenu.authors_website": "Author's Website"
+    "mrc.modmenu.authors_website": "Author's Website",
+
+    "yacl.configurable.configure": "Configure..."
 }
