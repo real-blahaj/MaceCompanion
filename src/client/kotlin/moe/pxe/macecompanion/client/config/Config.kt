@@ -34,5 +34,5 @@ object Config : JsonFileCodecConfig<Config>(FabricLoader.getInstance().configDir
     val plotIds by register<List<String>>(listOf("mace", "maceroulette", "statless", "14000004"), STRING.listOf())
 
     // NESTED CONFIG ===========================================================
-    val boosterListMax by register<Int>(10, INT)
+    val boosterListMax by register<Int>(5, INT)
 }
