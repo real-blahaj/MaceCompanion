@@ -7,6 +7,8 @@ import dev.isxander.yacl3.api.controller.IntegerFieldControllerBuilder
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder
 import dev.isxander.yacl3.config.v3.value
+import moe.pxe.macecompanion.client.config.controllers.EnumWithConfigControllerBuilder
+import moe.pxe.macecompanion.client.config.controllers.FormattedStringControllerBuilder
 import moe.pxe.macecompanion.client.enums.HudElements
 import moe.pxe.macecompanion.client.enums.HudLocation
 import moe.pxe.macecompanion.client.util.OnMaceRoulette
@@ -180,7 +182,7 @@ object ConfigMenu {
                     .name(Text.translatable("mrc.config.category.roundhud.group.hudElements"))
                     .description(OptionDescription.of(Text.translatable("mrc.config.category.roundhud.group.hudElements.description")))
                     .binding(Config.hudElements.asBinding())
-                    .controller { EnumControllerBuilder.create(it).enumClass(HudElements::class.java) }
+                    .controller { EnumWithConfigControllerBuilder.create(it).enumClass(HudElements::class.java) }
                     .initial(HudElements.ROUND_NUMBER)
                     .build()
                 )

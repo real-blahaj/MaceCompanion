@@ -1,11 +1,8 @@
-package moe.pxe.macecompanion.client.config
+package moe.pxe.macecompanion.client.config.controllers
 
 import dev.isxander.yacl3.api.Option
-import dev.isxander.yacl3.api.controller.ValueFormatter
 import dev.isxander.yacl3.gui.controllers.string.IStringController
-import net.minecraft.text.MutableText
 import net.minecraft.text.Text
-import java.util.function.Function
 
 class FormattedStringController(val opt: Option<String>, val formatter: (String) -> Text) : IStringController<String> {
 

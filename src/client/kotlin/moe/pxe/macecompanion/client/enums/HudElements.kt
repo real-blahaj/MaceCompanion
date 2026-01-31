@@ -1,10 +1,19 @@
 package moe.pxe.macecompanion.client.enums
 
+import dev.isxander.yacl3.api.ConfigCategory
 import dev.isxander.yacl3.api.NameableEnum
+import dev.isxander.yacl3.api.Option
+import dev.isxander.yacl3.api.OptionDescription
+import dev.isxander.yacl3.api.YetAnotherConfigLib
+import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder
+import dev.isxander.yacl3.config.v3.value
 import moe.pxe.macecompanion.client.StateManager
+import moe.pxe.macecompanion.client.config.Config
+import moe.pxe.macecompanion.client.config.controllers.ConfigurableEnum
 import moe.pxe.macecompanion.client.util.PlayerHead
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.gui.DrawContext
+import net.minecraft.client.gui.screen.Screen
 import net.minecraft.text.Style
 import net.minecraft.text.Text
 import net.minecraft.util.Colors
@@ -12,7 +21,7 @@ import net.minecraft.util.StringIdentifiable
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
-enum class HudElements : NameableEnum, StringIdentifiable {
+enum class HudElements : NameableEnum, StringIdentifiable, ConfigurableEnum {
     ROUND_NUMBER {
         override fun render(
             context: DrawContext,
@@ -136,10 +145,14 @@ enum class HudElements : NameableEnum, StringIdentifiable {
                 context.drawTextWithShadow(textRenderer, modifierText, xPos, yPos+4, -1)
 
                 StateManager.modifierBoosters[it]?.let { playerList ->
-                    playerList.indices.forEach {
-                        xPos = 28 + modifierWidth + (it*20)
-                        if (rightAligned) xPos = -44 - modifierWidth - (it*20)
-                        context.drawItem(PlayerHead.fromProfile(playerList[it]), xPos, yPos)
+                    playerList.forEachIndexed { index, profile ->
+                        xPos = 28 + modifierWidth + (index*20)
+                        if (rightAligned) xPos = -44 - modifierWidth - (index*20)
+                        if (index >= Config.boosterListMax.value) {
+                            context.drawTextWithShadow(textRenderer, Text.literal("+${playerList.size - Config.boosterListMax.value}").withColor(0xa63efc), xPos, yPos+4, -1)
+                            return@let
+                        }
+                        context.drawItem(PlayerHead.fromProfile(profile), xPos, yPos)
                     }
                 }
 
@@ -148,9 +161,31 @@ enum class HudElements : NameableEnum, StringIdentifiable {
 
             return 12+(StateManager.modifiers.size*20)
         }
+
+        override fun generateConfig(parent: Screen): Screen? {
+            return YetAnotherConfigLib.createBuilder()
+                .title(Text.translatable("mrc.hudelement.${name.lowercase()}"))
+                .category(ConfigCategory.createBuilder()
+                    .name(Text.translatable("mrc.hudelement.${name.lowercase()}"))
+                    .option(Option.createBuilder<Int>()
+                        .name(Text.translatable("mrc.config.modifiersConfig.option.boosterListMax"))
+                        .description(OptionDescription.of(Text.translatable("mrc.config.modifiersConfig.option.boosterListMax.description")))
+                        .binding(Config.boosterListMax.asBinding())
+                        .controller {
+                            IntegerSliderControllerBuilder.create(it)
+                                .range(0, 15)
+                                .step(1)
+                        }
+                        .build())
+                    .build())
+                .save(Config::saveToFile)
+                .build()
+                .generateScreen(parent)
+        }
     };
 
     abstract fun render(context: DrawContext, yOffset: Int, rightAligned: Boolean, bottomAligned: Boolean): Int
+    override fun generateConfig(parent: Screen): Screen? = null
     override fun asString(): String = name
     override fun getDisplayName(): Text = Text.translatable("mrc.hudelement.${name.lowercase()}")
 

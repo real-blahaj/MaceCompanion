@@ -56,6 +56,9 @@
     "mrc.config.category.miscellaneous.group.plotIds": "Plot IDs and Handles",
     "mrc.config.category.miscellaneous.group.plotIds.description": "A list of Plot IDs and Handles to look for when checking if the player is on Mace Roulette.",
 
+    "mrc.config.modifiersConfig.option.boosterListMax": "Maximum Boosters Shown",
+    "mrc.config.modifiersConfig.option.boosterListMax.description": "The maximum amount of modifier boosters to show. Any overflow will be shown as \"+n\" at the end of the list.",
+
     "mrc.roundhud.round": "ʀᴏᴜɴᴅ %s",
     "mrc.roundhud.alive": "%s ᴀʟɪᴠᴇ",
     "mrc.roundhud.eliminations": "\uD83E\uDE93 %s ᴇʟɪᴍɪɴᴀᴛɪᴏɴs",
@@ -115,5 +118,7 @@
     "mrc.hudelement.playtime": "Game Duration",
     "mrc.hudelement.modifiers": "Modifiers",
 
-    "mrc.modmenu.authors_website": "Author's Website"
+    "mrc.modmenu.authors_website": "Author's Website",
+
+    "yacl.configurable.configure": "Configure..."
 }
