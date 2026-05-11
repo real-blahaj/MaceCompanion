@@ -147,6 +147,7 @@ enum class HudElements : NameableEnum, StringIdentifiable, ConfigurableEnum {
 
                 val modifierText = it.translatable.copy().setStyle(Config.getAccentStyle(it.translatable.style)).also { text ->
                     if (StateManager.eternalModifier == it) text.append(Text.literal(" ∞").setStyle(Style.EMPTY.withColor(Formatting.WHITE).withShadowColor(-10068202)))
+                    if (StateManager.chargedModifiers.contains(it)) text.append(Text.literal(" ⚡").setStyle(Style.EMPTY.withColor(Formatting.BLUE).withShadowColor(-10068202)))
                 }
                 val modifierWidth = textRenderer.getWidth(modifierText)
                 xPos = 22
@@ -210,7 +211,7 @@ enum class HudElements : NameableEnum, StringIdentifiable, ConfigurableEnum {
             val textRenderer = MinecraftClient.getInstance().textRenderer
             val text = Text.translatable("mrc.roundhud.mace_chance_text",
                 Text.literal("%.2f%%".format(StateManager.maceChance)).also {
-                    if (Config.chanceUseColor.value) it.setStyle(Config.getAccentStyle(textColors[(StateManager.maceChance / 7.7).toInt().absoluteValue]))
+                    if (Config.chanceUseColor.value) it.setStyle(Config.getAccentStyle(textColors[(StateManager.maceChance / 7.7).toInt().coerceIn(0, textColors.size-1)]))
                 }).setStyle(Config.getAccentStyle(0x79fc00))
 
             val width = textRenderer.getWidth(text)

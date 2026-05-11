@@ -1,6 +1,7 @@
 package moe.pxe.macecompanion
 
 import com.mojang.authlib.GameProfile
+import com.mojang.serialization.JsonOps
 import moe.pxe.macecompanion.enums.Modifiers
 import moe.pxe.macecompanion.util.SubtitleCallback
 import moe.pxe.macecompanion.util.TitleCallback
@@ -11,6 +12,7 @@ import net.minecraft.client.MinecraftClient
 import net.minecraft.network.packet.s2c.play.SubtitleS2CPacket
 import net.minecraft.network.packet.s2c.play.TitleS2CPacket
 import net.minecraft.text.Style
+import net.minecraft.text.TextCodecs
 import net.minecraft.util.ActionResult
 import kotlin.time.TimeMark
 import kotlin.time.TimeSource
@@ -40,13 +42,19 @@ object StateManager {
         private set
     var eternalModifier: Modifiers? = null
         private set
+    var chargedModifiers = mutableSetOf<Modifiers>()
+        private set
 
     private val chatRoundNumberRegex = """ +Round (\d+) +""".toRegex()
 
     private val chatModifierHeaderRegex = """⏵ .*ᴍᴏᴅɪꜰɪᴇʀ:""".toRegex()
-    private val chatModifierItemRegex = """  ◇ (.+)""".toRegex()
-    private val chatModifierBoostedRegex = """  ◇ (.+) \(☁ Boosted by (.+)\)""".toRegex()
-    private val chatModifierIsEternalRegex = """(.+) \(Eternal\)""".toRegex()
+    // Accept variable leading spaces before the modifier bullet.
+    private val chatModifierItemRegex = """\s+◇ (.+)""".toRegex()
+    private val chatModifierBoostedRegex = """\s+◇ (.+) \(☁ Boosted by (.+)\)""".toRegex()
+
+    private val eternalModifierTexture = "eyJ0ZXh0dXJlcyI6IHsiU0tJTiI6IHsidXJsIjogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjFjNWQ3NjZjODQwMWM5NTY2Y2E1MDhhYTNkMjU0NDQwYjg4YjIxZjU5MGI1MWVjMTVjNGE5ZDk4YjE4OWMzZiJ9fX0="
+    private val chargedModifierTexture = "eyJ0ZXh0dXJlcyI6IHsiU0tJTiI6IHsidXJsIjogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDc1Mzg2MDAwNWQzNGRkNTMwMmRhNWVmOTA1Y2Q3ODFhYzcxNDFkMjJhYmMxZGIzOWMzMWJhMmZlM2M2ODRiZCJ9fX0="
+    private val mysteryModifierTexture = "eyJ0ZXh0dXJlcyI6IHsiU0tJTiI6IHsidXJsIjogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzlkODliMGJmNmY2NjU1YWJjMGFlY2NjY2Q2YTE4OGQwZWNjMzY2YTRiNWU2ZDFmZTJhM2ExY2U1MWYzMGU4YSJ9fX0="
 
     private val chatEliminationRegex = """⏵ .+ was eliminated by .+! \((\d+) remain\)""".toRegex()
     private val chatEarlyLeaveRegex = """⏵ .+ left while alive! \((\d+) remain\)""".toRegex()
@@ -61,6 +69,39 @@ object StateManager {
     private val titlePlayersAliveRegex = """(\d+) ᴀʟɪᴠᴇ""".toRegex()
     private val titleEliminatedRegex = """☠☠☠""".toRegex()
 
+    private fun messageToJsonString(message: net.minecraft.text.Text): String {
+        return TextCodecs.CODEC
+            .encodeStart(MinecraftClient.getInstance().world!!.registryManager.getOps(JsonOps.INSTANCE), message)
+            .getOrThrow()
+            .toString()
+    }
+
+    private fun messageContainsTexture(message: net.minecraft.text.Text, texture: String): Boolean {
+        val json = messageToJsonString(message)
+        return json.contains(texture)
+    }
+
+    private fun extractModifierNameFromMessage(message: net.minecraft.text.Text): String? {
+        // Search for modifier names in the plain text
+        Modifiers.entries.forEach { modifier ->
+            if (message.string.contains(modifier.matchName)) {
+                if (messageContainsTexture(message, mysteryModifierTexture)) {
+                    return "???"
+                }
+                return modifier.matchName
+            }
+        }
+        return null
+    }
+
+    private fun resolveModifierFromRawName(rawName: String?): Modifiers? {
+        val candidate = rawName?.trim().orEmpty()
+        if (candidate.isEmpty()) return null
+        return Modifiers.entries.find { enum ->
+            candidate == enum.matchName || candidate.contains(enum.matchName) || enum.matchName.contains(candidate)
+        }
+    }
+
     private var checkForModifiers = false
 
     private fun setRoundNumber(number: Int) {
@@ -74,6 +115,8 @@ object StateManager {
         gameOngoing = true
         modifiers = mutableListOf()
         modifierBoosters = mutableMapOf()
+        eternalModifier = null
+        chargedModifiers = mutableSetOf()
         maceChance = 100f/playersAlive
 //        MaceCompanion.LOGGER.info("Round: $round - Alive:$playersAlive/$playersTotal")
     }
@@ -114,21 +157,26 @@ object StateManager {
                 val modMatch = chatModifierItemRegex.matchEntire(message.string)
                 var modifier = Modifiers.UNKNOWN
 
-                (modBoostedMatch ?: modMatch)?.also {
-                    it.groupValues[1].let {
-                        var modName = it
-                        var isEternal = false
-                        chatModifierIsEternalRegex.matchEntire(it)?.let {
-                            modName = it.groupValues[1]
-                            isEternal = true
-                        }
-                        modifier = Modifiers.entries.find { enum -> enum.matchName == modName } ?: Modifiers.UNKNOWN
-                        if (isEternal) {
-                            eternalModifier = modifier
-                            modifiers.add(0, modifier)
-                        } else modifiers.add(modifier)
-                        modifierBoosters[modifier] = mutableListOf()
+                val capturedRawName = (modBoostedMatch ?: modMatch)?.groupValues?.getOrNull(1)
+                val fallbackRawName = extractModifierNameFromMessage(message)
+                modifier = resolveModifierFromRawName(capturedRawName)
+                    ?: resolveModifierFromRawName(fallbackRawName)
+                    ?: Modifiers.UNKNOWN
+
+                if (modifier != Modifiers.UNKNOWN) {
+                    if (messageContainsTexture(message, eternalModifierTexture)) {
+                        eternalModifier = modifier
+                        // eternal modifier appears first!
+                        modifiers.add(0, modifier)
+                    } else {
+                        modifiers.add(modifier)
                     }
+                    if (messageContainsTexture(message, chargedModifierTexture)) {
+                        chargedModifiers.add(modifier)
+                    }
+
+                    modifierBoosters[modifier] = mutableListOf()
+
                     when (modifier) {
                         Modifiers.VICTIM -> maceChance = (100f * (playersAlive - 1)) / playersAlive
                         Modifiers.DOUBLE -> maceChance = 200f / playersAlive
@@ -136,7 +184,7 @@ object StateManager {
                         Modifiers.QUADRUPLE -> maceChance = 400f / playersAlive
                         else -> {}
                     }
-                } ?: run {
+                } else {
                     checkForModifiers = false
                 }
 
