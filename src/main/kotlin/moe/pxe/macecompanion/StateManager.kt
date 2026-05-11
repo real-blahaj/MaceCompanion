@@ -133,6 +133,7 @@ object StateManager {
                         Modifiers.VICTIM -> maceChance = (100f * (playersAlive - 1)) / playersAlive
                         Modifiers.DOUBLE -> maceChance = 200f / playersAlive
                         Modifiers.TRIPLE -> maceChance = 300f / playersAlive
+                        Modifiers.QUADRUPLE -> maceChance = 400f / playersAlive
                         else -> {}
                     }
                 } ?: run {
