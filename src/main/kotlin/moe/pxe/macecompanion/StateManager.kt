@@ -160,7 +160,7 @@ object StateManager {
                 val capturedRawName = (modBoostedMatch ?: modMatch)?.groupValues?.getOrNull(1)
                 val fallbackRawName = extractModifierNameFromMessage(message)
                 modifier = resolveModifierFromRawName(capturedRawName)
-                    ?: resolveModifierFromRawName(fallbackRawName)
+                //    ?: resolveModifierFromRawName(fallbackRawName)
                     ?: Modifiers.UNKNOWN
 
                 if (modifier != Modifiers.UNKNOWN) {
