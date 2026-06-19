@@ -1,3 +1,6 @@
+> [!WARNING]
+> Mace Roulette Companion development has moved to [Emeraldx392/MaceRouletteCompanion](https://github.com/Emeraldx392/MaceRouletteCompanion). This repository has been archived and will no longer be used for MRC development. Thank you for your understanding.
+
 # Mace Roulette Companion
 
 Minecraft mod that adds a few quality of life features to Mace Roulette.
